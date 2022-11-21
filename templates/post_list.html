@@ -1,0 +1,43 @@
+{#{% extends 'index.html' %}#}
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <title>Welcome</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+
+<header>
+    <h1>Palsbook</h1>
+    <h3>Connect with pals and share your moments..!</h3>
+</header>
+
+<br /><br />
+<div>
+    <h2 style="text-align:center">Feed:</h2>
+</div>
+
+<div>
+    <p><strong>Add a post</strong></p>
+    <form method="POST">
+        {% csrf_token %}
+        <textarea rows = "5" cols = "60" name = "description">
+         </textarea><br>
+         <a href="{%  url 'account_login' %}">
+            <button type="submit">Post</button>
+        </a>
+    </form>
+</div>
+
+<br>
+
+{% for post in post_list %}
+    <fieldset>
+        <p><strong>{{ post.author }}</strong></p>
+        <p>{{ post.body }}</p>
+        <p>{{ post.created_on }}</p>
+    </fieldset>
+{% endfor %}

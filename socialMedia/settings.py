@@ -90,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'palsbook',
         'USER': 'fumax',
-        'PASSWORD': 'bkk7702bd',
+        'PASSWORD': '[...]',
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -133,7 +133,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = 'post-list'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Default primary key field type

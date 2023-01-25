@@ -51,3 +51,12 @@ SImply open your Web Browser and navigate to `https://127.0.0.1:8000/https://127
 #### Note
 
 The app is under development. Some features or buttons may not work in the current state.
+
+
+#### Screenshots
+
+![image](https://user-images.githubusercontent.com/40835240/214489644-fd88f38d-8368-414b-8ded-b9d3a7a1600f.png)
+
+![image](https://user-images.githubusercontent.com/40835240/214489747-844d6322-588e-4900-99dc-5de574a28d03.png)
+
+

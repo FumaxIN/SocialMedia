@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <title>Feed</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+
+
+<body class="has-background-black">
+
+
+<header class="has-background-black">
+    <div>
+        <div class="field has-addons has-addons-centered">
+            <p class="has-icons-left is-left">
+                <span class="material-symbols-outlined" style="font-size:35px;color:white">menu &emsp;</span>
+            </p>
+            <p class="control has-icons-left is-centered">
+                <input class="input is-hovered is-rounded has-background-black-ter has-text-white" type="text" placeholder="Find pals" id="user_name">
+                <span class="icon is-small is-left">
+                    <i class="material-symbols-outlined" style="color:white">search</i>
+                </span>
+            </p>
+            <p>&emsp; &emsp;</p>
+            <p class="control has-icons-centered is-spcaed">
+                <span class="material-symbols-outlined" style="font-size:35px;color:white">person</span>
+            </p>
+        </div>
+    </div>
+</header>
+<br /> <br /> <br /> <br />
+<div class="field has-addons has-addons-centered">
+    {% for post in post_list %}
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">
+              {{ post.author }}
+            </p>
+            <button class="card-header-icon" aria-label="more options">
+              <span class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </button>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              {{ post.body }}
+              <br>
+              <time datetime="2016-1-1">{{ post.created_on }}</time>
+            </div>
+          </div>
+          <footer class="card-footer">
+            <a href="#" class="card-footer-item">Like</a>
+            <a href="#" class="card-footer-item">Comment</a>
+            <a href="#" class="card-footer-item">Bookmark</a>
+          </footer>
+        <br /> <br />
+        </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

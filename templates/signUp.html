@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <title>Welcome</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+
+<body class="has-background-black">
+
+<header>
+    <p class="has-text-centered is-size-1 has-text-white">
+        <video width="700" height="600" autoplay loop><source src="logo.mp4" type="video/mp4"></video>
+    </p>
+    <p></p>
+    <p class="has-text-white has-text-centered">Connect with pals and share your moments..!</p>
+</header>
+
+<br /><br />
+
+
+<form>
+<div class="field columns is-mobile is-centered">
+  <p class="control has-icons-left">
+    <input class="input is-hovered has-background-dark has-text-white" type="text" placeholder="Username" id="user_name">
+    <span class="icon is-small is-left">
+      <i class="material-symbols-outlined" style="color: white">person</i>
+    </span>
+  </p>
+
+</div>
+<br />
+
+<div class="field columns is-mobile is-centered">
+  <p class="control has-icons-left">
+    <input class="input is-hovered has-background-dark has-text-white" type="email" placeholder="Email" id="e_mail">
+    <span class="icon is-small is-left">
+      <i class="material-symbols-outlined" style="color: white">mail</i>
+    </span>
+  </p>
+</div>
+<br />
+<div class="field columns is-mobile is-centered">
+  <p class="control has-icons-left">
+    <input class="input is-hovered has-background-dark has-text-white" type="password" placeholder="Password" id="pass_word">
+    <span class="icon is-small is-left">
+      <i class="material-symbols-outlined" style="color: white">lock</i>
+    </span>
+  </p>
+</div>
+<br />
+<div class="field columns is-mobile is-centered">
+  <p class="control has-icons-left">
+    <input class="input is-hovered has-background-dark has-text-white" type="password" placeholder="Retype Password" id="pass_word">
+    <span class="icon is-small is-left">
+      <i class="material-symbols-outlined" style="color: white">lock</i>
+    </span>
+  </p>
+</div>
+<div class="field is-grouped is-grouped-centered">
+    <div class="control">
+    <a class="button is-link" onclick="doSignup()">Signup</a>
+  </div>
+</div>
+</form>
+<br /><br />
+
+
+
+<script>
+    function doLogin(){
+        let x = document.querySelector("#user_name")
+        let y = document.querySelector("#e_mail")
+        let z = document.querySelector("#pass_word")
+        fetch("https://127.0.0.1:8000/dj-rest-auth/login/",{
+            method : "POST",
+            headers:{
+                'Content-Type':"application/json"
+            },
+            body:JSON.stringify({'username':x.value, 'password':z.value})
+        }).then((resp)=>resp.json()).then((data)=>{console.log(data)})
+    }
+</script>
+
+
+</body>
+
+
+</html>

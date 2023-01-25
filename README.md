@@ -18,10 +18,10 @@ A basic Social Media website where users can create posts and interact with pals
 * [Python](https://www.python.org/downloads/) 3.8 or above
 * [pip](https://pip.pypa.io/en/stable/installing/) 20.1 or above
 * [Django](https://pypi.org/project/Django/)
-* [Django-Rest-Framework](pip install djangorestframework)
+* [Django-Rest-Framework](https://pypi.org/project/djangorestframework/k)
 * [DJ-Rest-Auth](https://pypi.org/project/dj-rest-auth/)
 * [Bulma(for Django)](https://pypi.org/project/django-bulma/)
-* [SimpleJWT](pip install djangorestframework-simplejwt)
+* [SimpleJWT](https://pypi.org/project/djangorestframework-simplejwt/)
 * [MariaDB](https://mariadb.org/https://mariadb.org/)
 
 ## Running

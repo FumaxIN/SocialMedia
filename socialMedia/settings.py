@@ -159,8 +159,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'palsbook',
-        'USER': 'fumax',
-        'PASSWORD': 'bkk7702bd',
+        'USER': 'sql_username',
+        'PASSWORD': 'password',
         'HOST': '127.0.0.1',
         'PORT': '',
     }

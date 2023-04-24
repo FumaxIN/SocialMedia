@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+
+<head>
+    <title>Feed</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600&display=swap" rel="stylesheet">
+
+{#    <link rel="stylesheet" href="../mybulma/css/mystyles.css">#}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+</head>
+
+
+<body class="has-background-black">
+
+
+<header class="has-background-black">
+    <div class="columns is-multiline is-centered">
+        <div class=" column is-left is-size-1 has-text-white">
+|
+            <video muted width="200" height="100" autoplay loop><source src="{% static "logo.m4v" %}" type="video/mp4"></video>
+        </div>
+        <div class="column has-icons-left">
+            <br/>
+            <p class="control has-icons-left">
+            <input class="input is-hovered is-rounded has-background-black-ter has-text-white is-half" type="text" placeholder="Find pals" id="user_name">
+            <span class="icon is-small is-left">
+                <i class="material-symbols-outlined" style="color: white">search</i>
+            </span>
+            </p>
+
+        </div>
+        <div class="column">
+
+        </div>
+    </div>
+</header>
+<br /> <br /> <br /> <br />
+<div class="columns is-multiline is-centered">
+    <div class="column has-text-centered">
+        <aside class="menu">
+            <ul class="menu-list">
+
+                <li><a onclick="return homeRedirect()" class="has-text-white is-bold is-size-4 is-family-secondary"><span class="material-symbols-outlined is-size-4">home</span>&nbsp;Home</a></li>
+                <br/>
+                <li><a class="has-text-white is-bold is-size-4 is-family-secondary"><span class="material-symbols-outlined is-size-4">notifications</span>&nbsp;&nbsp;Notifications</a></li>
+                <br/>
+                <li><a class="has-text-white is-bold is-size-4 is-family-secondary"><span class="material-symbols-outlined is-size-4">bookmark</span>&nbsp;&nbsp;Bookmarks</a></li>
+                <br/>
+                <li><a class="has-text-white is-bold is-size-4 is-family-secondary"><span class="material-symbols-outlined is-size-4">person</span>&nbsp;&nbsp;Profile</a></li>
+                <br/>
+                <li><a onclick=" return userLogout()" class="has-text-white is-bold is-size-4 is-family-secondary"><span class="material-symbols-outlined is-size-4">logout</span>&nbsp;&nbsp;Logout</a></li>
+
+            </ul>
+
+        </aside>
+    </div>
+    <div class="column is-two-fifths-widescreen has-addons has-addons-centered is-vcentered" id="feed_list">
+
+    </div>
+
+    <div class="column has-addons has-addons-centered has-text-centered">
+        <a class="has-text-white is-bold is-size-4">What's in your mind?</a>
+        <br/> <br/>
+        <textarea id="newPost" class="textarea is-info is-hovered has-background-dark has-text-white" placeholder="Info textarea"></textarea>
+
+        <br/>
+{#        <button class="button is-info is-focused is-right" id="image"><span class="material-symbols-outlined">#}
+{#image#}
+{#</span></button>#}
+    <div class="file" id="imageUpload">
+        <label class="file-label">
+            <input class="file-input" type="file" name="resume">
+            <span class="file-cta">
+                <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                Choose a file…
+                </span>
+            </span>
+        </label>
+    </div>
+        <button class="button is-info is-focused is-left" onclick="return addPost()">Post</button>
+    </div>
+</div>
+
+
+
+
+<script>
+
+     window.addEventListener('load', (event) => {
+         fetch("/social/")
+        .then((data)=>{return data.json();})
+        .then(completeData => {
+            {#console.log(completeData)#}
+            let data1 = ""
+            completeData['results'].map((values)=>{
+                data1 += `<div class="card is-vcentered has-background-black-bis is-outlined">
+          <header class="card-header">
+            <p class="card-header-title has-text-white is-bold">
+              @${values.author}
+            </p>
+            <button class="card-header-icon" aria-label="more options">
+              <span class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </button>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              <p class="has-text-white">${values.body}</p>
+              {#<img src="{% get_media_prefix %}">${values.media}</img>#}
+              <img src="{{ MEDIA_URL }}${values.media}"></img>
+              <br>
+              <time datetime="2016-1-1">${values.created_on}</time>
+            </div>
+          </div>
+          <footer class="card-footer">
+            <a onclick="buttonColor()" id="like" class="card-footer-item"><span class="material-symbols-outlined">thumb_up_alt</span></a>
+            <a href="#" class="card-footer-item"><span class="material-symbols-outlined">comment</span></a>
+            <a href="#" class="card-footer-item"><span class="material-symbols-outlined">bookmark</span></a>
+          </footer>
+        <br />
+        </div>
+
+<br />`
+            });
+            document.getElementById("feed_list").innerHTML=data1;
+        })
+     });
+
+
+
+</script>
+
+<script>
+    function buttonColor(){
+         document.getElementById("like").style.color='#911'
+     }
+</script>
+
+<script>
+    function addPost(){
+        let x = document.querySelector("#newPost")
+        let y = document.querySelector("#imageUpload")
+        fetch("https://127.0.0.1:8000/social/",{
+            method : "POST",
+            headers : {
+                'Content-Type' : "application/json"
+            },
+            body:JSON.stringify({'body':x.value, 'pic':y.value}),
+            {#redirect : "/social/feed",#}
+        }).then((resp)=> {
+            if(resp.status == 200){
+                window.location.href = '/social/feed'
+            }
+        }).then((data)=>{console.log(data)})
+    }
+
+    function userLogout(){
+        fetch("/dj-rest-auth/logout/",{
+            method : "POST",
+            headers : {
+                'Content-Type' : "application/json"
+            },
+            body : JSON.stringify({'content':1}),
+        }).then((resp)=> {
+            window.location.href = '/'
+        }).then((data)=>{console.log(data)})
+    }
+
+    function homeRedirect(){
+        window.location.replace("/social/feed");
+        return false;
+    }
+</script>
+
+</body>
+</html>

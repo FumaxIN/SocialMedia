@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>User Profile</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600&display=swap" rel="stylesheet">
+    <style>
+
+		.user-profile {
+			padding: 2rem;
+			background-color: #222;
+			border-radius: 0.5rem;
+			box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.1);
+		}
+
+		.user-profile img {
+			max-width: 150px;
+			border-radius: 50%;
+			margin-bottom: 1rem;
+		}
+
+		.user-profile h1 {
+			font-size: 1.5rem;
+			font-weight: 700;
+			margin-bottom: 0.5rem;
+		}
+
+		.user-profile h2 {
+			font-size: 1.2rem;
+			font-weight: 500;
+			margin-bottom: 1rem;
+			color: #999;
+		}
+
+		.user-profile p {
+			font-size: 1rem;
+			line-height: 1.5;
+			color: #ccc;
+			margin-bottom: 1rem;
+		}
+
+		.user-profile .social-icons a {
+			color: #ccc;
+			margin-right: 0.5rem;
+			font-size: 1.2rem;
+			transition: color 0.3s ease-in-out;
+		}
+
+		.user-profile .social-icons a:hover {
+			color: #1abc9c;
+		}
+	</style>
+</head>
+
+<header class="has-background-black">
+    <div class="columns is-multiline is-centered">
+        <div class=" column is-left is-size-1 has-text-white">
+            <video muted width="200" height="100" autoplay loop><source src="{% static "logo.m4v" %}" type="video/mp4"></video>
+        </div>
+        <div class="column has-icons-left">
+            <br/>
+            <p class="control has-icons-left">
+            <input class="input is-hovered is-rounded has-background-black-ter has-text-white is-half" type="text" placeholder="Find pals" id="user_name">
+            <span class="icon is-small is-left">
+                <i class="material-symbols-outlined" style="color: white">search</i>
+            </span>
+            </p>
+
+        </div>
+        <div class="column">
+
+        </div>
+    </div>
+</header>
+<body class="has-background-black">
+<section>
+    <div class="columns is-multiline is-centered">
+    <div class="column has-text-centered">
+        <aside class="menu">
+            <ul class="menu-list">
+
+                <li><a onclick="return homeRedirect()" class="has-text-white is-bold is-size-4 is-family-secondary"><span class="material-symbols-outlined is-size-4">home</span>&nbsp;Home</a></li>
+                <br/>
+                <li><a class="has-text-white is-bold is-size-4 is-family-secondary"><span class="material-symbols-outlined is-size-4">notifications</span>&nbsp;&nbsp;Notifications</a></li>
+                <br/>
+                <li><a class="has-text-white is-bold is-size-4 is-family-secondary"><span class="material-symbols-outlined is-size-4">bookmark</span>&nbsp;&nbsp;Bookmarks</a></li>
+                <br/>
+                <li><a class="has-text-white is-bold is-size-4 is-family-secondary"><span class="material-symbols-outlined is-size-4">person</span>&nbsp;&nbsp;Profile</a></li>
+                <br/>
+                <li><a onclick=" return userLogout()" class="has-text-white is-bold is-size-4 is-family-secondary"><span class="material-symbols-outlined is-size-4">logout</span>&nbsp;&nbsp;Logout</a></li>
+
+            </ul>
+
+        </aside>
+    </div>
+    <div class="column is-two-fifths-widescreen has-addons has-addons-centered is-vcentered" id="profile-info">
+
+
+
+    </div>
+
+    <div class="column has-addons has-addons-centered has-text-centered">
+        <a class="has-text-white is-bold is-size-4">What's in your mind?</a>
+        <br/> <br/>
+        <textarea id="newPost" class="textarea is-info is-hovered has-background-dark has-text-white" placeholder="Info textarea"></textarea>
+
+        <br/>
+{#        <button class="button is-info is-focused is-right" id="image"><span class="material-symbols-outlined">#}
+{#image#}
+{#</span></button>#}
+    <div class="file" id="imageUpload">
+        <label class="file-label">
+            <input class="file-input" type="file" name="resume">
+            <span class="file-cta">
+                <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                Choose a file…
+                </span>
+            </span>
+        </label>
+    </div>
+        <button class="button is-info is-focused is-left" onclick="return addPost()">Post</button>
+    </div>
+</div>
+</section>
+</body>
+</html>
+
+
+
+<script>
+  window.addEventListener('load', (event) => {
+        {#var id = document.getElementById('id-input').value;#}
+        var currentUrl = window.location.href;
+        var userID = currentUrl.split('/').slice(-2)[0];
+
+        var url = '/social/users/'+userID+'/';
+        fetch(url)
+            .then((data)=>{return data.json();})
+        .then(completeData => {
+            console.log(completeData);
+            let data1 = ""
+            {
+                data1 += `<div class="user-profile">
+                    <div class="columns">
+                    <div class="column is-4">
+                        <figure class="image is-square">
+                            <img src="{{ MEDIA_URL }}${completeData.dp}">
+                        </figure>
+                    </div>
+                    <div class="column is-8">
+                        <h1 class="title has-text-white">${completeData.first_name} ${completeData.last_name}</h1>
+                        <p class="has-text-white">${completeData.bio_s}</p>
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>`
+            }
+            document.getElementById("profile-info").innerHTML=data1;
+        })
+     });
+</script>

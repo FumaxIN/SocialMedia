@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views import generic, View
 from django.contrib.auth.models import User
 from rest_framework.views import APIView, Response
-from .serializers import getPostSerializer, postPostSerializer, CommentSerializer, ViewCommentSerializer, feedSerializer, UserDetailsSerializer, UpdateProfileSerializer, UserLikedPostsSerializer, PostLikesSerializer
+from .serializers import *
 from .models import Post, Comment, UserProfile, Like
 import json
 from rest_framework.permissions import IsAuthenticated
@@ -19,15 +19,17 @@ def feed(request):
     }
     return render(request, 'post_list_temp.html', context)
 class PostListView(APIView):
-    # permission_classes = (IsAuthenticated,)
     def get(self, request, *args, **kwargs):
         posts = Post.objects.filter(deleted=False).order_by('-created_on')
         context = {
-            'post_list' : posts
+            'post_list' : posts,
+
         }
         paginator = defPagination()
         result = paginator.paginate_queryset(posts, request, view=self)
+        # serializer = feedSerializer(result, context={"request":request},  many=True)
         serializer = feedSerializer(result, many=True)
+
         # return render(request, 'post_list.html', context)
         return paginator.get_paginated_response(serializer.data)
 
@@ -51,7 +53,8 @@ class detailPost(APIView):
         post = Post.objects.get(pk=postID)
         if post.deleted==1:
             return Response({'status':'not found'})
-        serializer = getPostSerializer(post)
+        serializer = getPostSerializer(post, context={'request': request})
+
 
         return Response(serializer.data)
 
@@ -173,5 +176,9 @@ class PostLikes(APIView):
         serializer = PostLikesSerializer(likes, many=True)
         return Response(serializer.data)
 
-def ProfileSection(request, userID):
+def ProfileSection(request):
     return render(request, 'UserProfileSection.html')
+
+
+
+

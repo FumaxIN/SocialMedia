@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600&display=swap" rel="stylesheet">
 
 {#    <link rel="stylesheet" href="../mybulma/css/mystyles.css">#}
@@ -66,29 +67,8 @@
 
     </div>
 
-    <div class="column has-addons has-addons-centered has-text-centered">
-        <a class="has-text-white is-bold is-size-4">What's in your mind?</a>
-        <br/> <br/>
-        <textarea id="newPost" class="textarea is-info is-hovered has-background-dark has-text-white" placeholder="Info textarea"></textarea>
+    <div class="column has-addons has-addons-centered has-text-centered" id="add_post">
 
-        <br/>
-{#        <button class="button is-info is-focused is-right" id="image"><span class="material-symbols-outlined">#}
-{#image#}
-{#</span></button>#}
-    <div class="file" id="imageUpload">
-        <label class="file-label">
-            <input class="file-input" type="file" name="resume">
-            <span class="file-cta">
-                <span class="file-icon">
-                    <i class="fas fa-upload"></i>
-                </span>
-                <span class="file-label">
-                Choose a file…
-                </span>
-            </span>
-        </label>
-    </div>
-        <button class="button is-info is-focused is-left" onclick="return addPost()">Post</button>
     </div>
 </div>
 
@@ -102,13 +82,36 @@
 
     {#const app = document.getElementById("feed-list")#}
 
-    const Card = ({ id, author, body, media, created_on }) => {
+    const Card = ({ id, author, body, media, likes_count, created_on }) => {
         const mediaUrl = "{{ MEDIA_URL }}";
-        const [likes, setLikes] = React.useState(0)
+        const [likes, setLikes] = React.useState(likes_count)
+        const [liked, setLiked] = React.useState(localStorage.getItem('liked') === 'true');
 
-        function updateLike(){
-            setLikes(likes + 1)
+        function updateLike(event) {
+            const target = event.target;
+            axios.post('/social/post/' + id + '/', {})
+                .then(response => {
+                    if (response.data.Status === 'Liked') {
+                        setLikes(likes + 1);
+                        target.style.color = '#911';
+                        {#document.getElementById("like").style.color='#911'#}
+                        setLiked(true);
+                        localStorage.setItem('liked', 'true');
+                    } else if (response.data.Status === 'Unliked') {
+                        setLikes(likes - 1);
+                        target.style.removeProperty('color');v
+                        {#document.getElementById("like").style.removeProperty('color')#}
+                        setLiked(false);
+                        localStorage.removeItem('liked');
+                    }
+                })
+                .catch(error => {
+                    console.error('Failed to update like', error);
+                });
         }
+
+
+
 
             return (
                 <div key={id} className="card is-vcentered has-background-black-bis is-outlined">
@@ -132,7 +135,7 @@
           </div>
         </div>
                         <footer className="card-footer">
-                            <a onClick={updateLike} id="like" className="card-footer-item"><span className="material-symbols-outlined">thumb_up_alt {likes}</span></a>
+                            <a onClick={updateLike} className="card-footer-item"><span className="material-symbols-outlined">thumb_up_alt</span>&nbsp;&nbsp;&nbsp;{likes}</a>
                             <a href="#" className="card-footer-item"><span className="material-symbols-outlined">comment</span></a>
                             <a href="#" className="card-footer-item"><span className="material-symbols-outlined">bookmark</span></a>
                         </footer>
@@ -166,6 +169,7 @@
                                 author={item.author}
                                 body={item.body}
                                 media={item.media}
+                                likes_count={item.likes_count}
                                 created_on={item.created_on}
                             />
                             </div>
@@ -182,47 +186,101 @@
 
 </script>
 
-{#<script>#}
-{#    function buttonColor(){#}
-{#         document.getElementById("like").style.color='#911'#}
-{#     }#}
-{#</script>#}
 
-<script>
-    function addPost(){
-        let x = document.querySelector("#newPost")
-        let y = document.querySelector("#imageUpload")
-        fetch("https://127.0.0.1:8000/social/",{
-            method : "POST",
-            headers : {
-                'Content-Type' : "application/json"
-            },
-            body:JSON.stringify({'body':x.value, 'pic':y.value}),
-            {#redirect : "/social/feed",#}
-        }).then((resp)=> {
-            if(resp.status == 200){
-                window.location.href = '/social/feed'
+
+
+
+<style>
+.is-flex-direction-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-preview {
+  margin-bottom: 1rem;
+}
+
+.button.is-info.is-focused.is-left {
+  margin-top: 1rem;
+}
+</style>
+
+
+
+
+<script type="text/jsx">
+
+    const AddPost = () => {
+        const [imagePreview, setImagePreview] = React.useState(null);
+        const handleAddPost = () => {
+        let x = document.querySelector("#newPost");
+        let y = document.querySelector("#imageUpload input[name='resume']");
+        let file = y.files[0]; // Get the selected file from the input element
+        let formData = new FormData(); // Create a FormData object to send the file
+
+    formData.append('body', x.value); // Add other form data fields
+    formData.append('media', file); // Add the image file to the FormData object
+
+
+        axios.post("https://127.0.0.1:8000/social/", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
             }
-        }).then((data)=>{console.log(data)})
-    }
+        }).then((resp) => {
+            if (resp.status === 200) {
+                window.location.href = '/social/feed';
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    };
 
-    function userLogout(){
-        fetch("/dj-rest-auth/logout/",{
-            method : "POST",
-            headers : {
-                'Content-Type' : "application/json"
-            },
-            body : JSON.stringify({'content':1}),
-        }).then((resp)=> {
-            window.location.href = '/'
-        }).then((data)=>{console.log(data)})
-    }
+        const handleImageChange = (event) => {
+  let file = event.target.files[0];
+  let reader = new FileReader();
+  reader.onloadend = () => {
+    setImagePreview(reader.result);
+  };
+  reader.readAsDataURL(file);
+};
 
-    function homeRedirect(){
-        window.location.replace("/social/feed");
-        return false;
-    }
+        return (
+  <div>
+    <a className="has-text-white is-bold is-size-4">What's in your mind?</a>
+    <br/><br/>
+    <textarea id="newPost" className="textarea is-info is-hovered has-background-dark has-text-white" placeholder="Info textarea"></textarea>
+    <br/>
+    <div className="is-flex-direction-column">
+  <div className="image-preview is-flex is-align-self-auto">
+    {imagePreview ? (
+      <img src={imagePreview} alt="Image Preview" className="image is-square" />
+    ) : (
+      <p>Image preview</p>
+    )}
+  </div>
+  <div className="file" id="imageUpload">
+    <label className="file-label">
+      <input className="file-input" type="file" name="resume" onChange={handleImageChange} />
+      <span className="material-symbols-rounded is-blue has-text-blue">
+        image
+      </span>
+    </label>
+  </div>
+  <button className="button is-info is-focused is-left" onClick={handleAddPost}>
+    Post
+  </button>
+</div>
+  </div>
+);
+
+    };
+
+    ReactDOM.render(<AddPost />, document.getElementById("add_post"))
+
 </script>
+
+
 
 </body>
 </html>

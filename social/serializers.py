@@ -13,10 +13,25 @@ class ViewCommentSerializer(serializers.ModelSerializer):
 
 class feedSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
-
+    likes_count = serializers.SerializerMethodField()
+    # liked_by_current_user = serializers.SerializerMethodField()
     class Meta:
         model = Post
-        fields = ['id', 'body', 'author', 'media', 'created_on']
+        # fields = ['id', 'body', 'author', 'media', 'likes_count', 'liked_by_current_user', 'created_on']
+        fields = ['id', 'body', 'author', 'media', 'likes_count', 'created_on']
+    def get_likes_count(self, obj):
+        return obj.like_set.count()
+
+    # def get_liked_by_current_user(self, obj):
+    #     request = self.context['request'] # Get request object from context
+    #     user = request.user # Get current user from request
+    #     if user.is_authenticated:
+    #         try:
+    #             like = Like.objects.get(user=user.userprofile, post=obj)
+    #             return True
+    #         except Like.DoesNotExist:
+    #             return False
+    #     return False
 
 
 class getPostSerializer(serializers.ModelSerializer):
@@ -35,7 +50,6 @@ class getPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'body', 'media', 'author', 'created_on', 'comment']
-        # fields = ['id','url','body','author','created_on']
 
 
 class postPostSerializer(serializers.ModelSerializer):
@@ -93,6 +107,8 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
         instance.userprofile.save()
         return instance
 
+# class postAction
+
 class UserLikedPostsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
@@ -103,3 +119,5 @@ class PostLikesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = ['user']
+
+

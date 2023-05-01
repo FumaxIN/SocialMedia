@@ -22,8 +22,6 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=100, blank=True)
     profile_image = models.ImageField(upload_to='user_image', null=True, blank=True)
-    liked_posts = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
-    # posts = models.ForeignKey(Post, default=None, blank=True,on_delete=models.CASCADE)
 
 class Like(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -32,4 +30,6 @@ class Like(models.Model):
     class Meta:
         # Define a unique constraint to prevent duplicate likes by a user on a post
         unique_together = ('user', 'post')
+
+
 
